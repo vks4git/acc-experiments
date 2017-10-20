@@ -14,7 +14,15 @@ myData = MyAccData x y z
     y = fromList (Z :. 2 :. 2 :. 3) [0..11] :: Array DIM3 Int
     z = fromList (Z :. 10) "loremipsum" :: Array DIM1 Char
 
-weirdCalc :: Acc (Plain MyAccData) -> Acc MyTupRepr
+-- A calculation that uses MyAccData
+-- Possible signatures:
+-- Acc (Plain MyAccData) -> Acc MyTupRepr
+-- Acc MyTupRepr -> Acc MyTupRepr
+-- Acc MyTupRepr -> Acc (Plain MyAccData)
+-- All these types are equivalent since
+--  type Plain MyAccData = MyTupRepr
+-- in the 'instance Lift Acc MyAccData' declaration
+weirdCalc :: Acc (Plain MyAccData) -> Acc (Plain MyAccData)
 weirdCalc dat = lift (f, s, t)
   where
     f = A.map (A.^(2 :: Exp Int)) $ first dat
